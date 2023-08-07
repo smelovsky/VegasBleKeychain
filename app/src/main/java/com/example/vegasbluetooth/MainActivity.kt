@@ -58,6 +58,7 @@ import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.Observer
@@ -148,9 +149,13 @@ class MainActivity : ComponentActivity() {
     val ADVERTISING_TIMED_OUT = 6
 
 
+    //private val vm: VegasViewModel by viewModels()
+
     @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //viewModel = vm
 
         btAdvertisingFailureReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
@@ -559,24 +564,6 @@ class MainActivity : ComponentActivity() {
         ActivityCompat.requestPermissions(this, bluetoothPermissions,101)
     }
 
-    private var requestBluetooth = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == RESULT_OK) {
-            Log.d("zzz","requestBluetooth: ${result.resultCode} granted")
-            val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-            val adapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-            if (!adapter.isEnabled) {
-                // prompt the user to enable bluetooth
-                Log.d("zzz","enable bluetooth")
-            } else {
-                Log.d("zzz","disable bluetooth")
-            }
-
-        }else{
-            Log.d("zzz","requestBluetooth: ${result.resultCode} deny")
-        }
-
-    }
-
 
     fun putPreferences() {
         val editor = prefs.edit()
@@ -646,9 +633,9 @@ class MainActivity : ComponentActivity() {
             }
             is BleState.ScanningStoped -> {
                 Log.d("zzz", "BleState.ScanningStoped")
-                viewModel.isWaitToStartScan.value = false
-                viewModel.isWaitToStopScan.value = false
-                viewModel.isWaitToStartConnect.value = true
+                viewModel.isWaitToStartScan.value = viewModel.bleDeviceName.value == ""
+                viewModel.isWaitToStopScan.value = viewModel.bleDeviceName.value == ""
+                viewModel.isWaitToStartConnect.value = viewModel.bleDeviceName.value != ""
                 viewModel.isWaitToStartWakeup.value = false
             }
             is BleState.Connected -> {
@@ -664,7 +651,7 @@ class MainActivity : ComponentActivity() {
                 viewModel.isWaitToStopScan.value = false
                 viewModel.isWaitToStartConnect.value = false
                 viewModel.isWaitToStartWakeup.value = false
-
+                viewModel.messageResponse.value = ""
             }
             is BleState.StartConnect -> {
                 Log.d("zzz", "BleState.StartConnect")

@@ -85,11 +85,13 @@ class VegasViewModel @Inject constructor(
 
     val isSetConnection = MutableStateFlow(false)
     val message = MutableStateFlow("")
+    val messageResponse = MutableStateFlow("")
 
     val isWaitToStartScan = MutableStateFlow(true)
     val isWaitToStopScan = MutableStateFlow(false)
     val isWaitToStartConnect = MutableStateFlow(false)
     val isWaitToStartWakeup = MutableStateFlow(false)
+
 
     val isScanning = bleScanApi.isScanning
     val isConnecting = bleScanApi.isConnecting

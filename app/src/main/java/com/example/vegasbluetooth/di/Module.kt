@@ -11,12 +11,14 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 
 @Module
 @InstallIn(SingletonComponent::class)
 object BleScanModule {
     @Provides
+    @Singleton
     fun provideBleScanApi(@ApplicationContext appContext: Context): BleScanApi {
 
         return BleScanImpl(appContext)
@@ -27,6 +29,7 @@ object BleScanModule {
 @InstallIn(SingletonComponent::class)
 object SoundModule {
     @Provides
+    @Singleton
     fun provideSoundApi(app: Application): SoundApi {
 
         return SoundImpl(app)

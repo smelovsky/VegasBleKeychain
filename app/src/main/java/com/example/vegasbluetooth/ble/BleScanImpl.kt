@@ -123,9 +123,13 @@ class BleScanImpl(val context: Context) : BleScanApi {
                 val success = it.writeCharacteristic(messageCharacteristic)
                 Log.d("zzz", "onServicesDiscovered: message send: $success")
                 if (success) {
-                    _bleState.postValue(BleState.Sended)
+                    viewModel.messageResponse.value = "success"
+                    //_bleState.postValue(BleState.Sended)
+                } else {
+                    viewModel.messageResponse.value = "fail"
                 }
             } ?: run {
+                viewModel.messageResponse.value = "no connection"
                 Log.d("zzz", "sendMessage: no gatt connection to send a message with")
             }
         }

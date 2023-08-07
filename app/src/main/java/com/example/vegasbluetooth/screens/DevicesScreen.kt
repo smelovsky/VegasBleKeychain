@@ -34,6 +34,7 @@ fun DevicesScreen() {
     val isConnecting by viewModel.isConnecting.collectAsState()
 
     val bleDeviceName by viewModel.bleDeviceName.collectAsState()
+    val messageResponse by viewModel.messageResponse.collectAsState()
 
     Column(
         modifier = Modifier
@@ -44,8 +45,7 @@ fun DevicesScreen() {
         if (isScanning) {
             CircularProgressIndicator(
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 16.dp),
+                    .align(Alignment.CenterHorizontally),
             )
 
             Text(
@@ -53,14 +53,12 @@ fun DevicesScreen() {
                 fontSize = 18.sp,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .padding(top = 8.dp, bottom = 16.dp)
                     .align(Alignment.CenterHorizontally),
             )
         } else if (isConnecting){
             CircularProgressIndicator(
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 16.dp),
+                    .align(Alignment.CenterHorizontally),
             )
 
             Text(
@@ -68,18 +66,34 @@ fun DevicesScreen() {
                 fontSize = 18.sp,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .padding(top = 8.dp, bottom = 16.dp)
                     .align(Alignment.CenterHorizontally),
             )
         }
 
-        Text(text = bleDeviceName,
-            fontSize = 18.sp,
-            modifier = Modifier.padding(horizontal = 20.dp),
-            color = MaterialTheme.colorScheme.primary
-        )
+        Box(contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(text = bleDeviceName,
+                textAlign = TextAlign.Center,
+                fontSize = 18.sp,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
 
+        if (messageResponse != "") {
+            Box(contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(text = "($messageResponse)",
+                    textAlign = TextAlign.Center,
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+        }
     }
+
 }
 
 @SuppressLint("StateFlowValueCalledInComposition")
